@@ -41,7 +41,7 @@ const DevicesPages = ({ devicesState, getDevicesFromApi, notifyPost }) => {
   const notifyHandler = async () => {
     let name = `Syed Nazmus Shakib`;
     let email = `sakibsyed01@gmail.com`;
-    let repoUrl = `as`;
+    let repoUrl = `https://github.com/syedsakib/frontend-task`;
     let message = `Hello, this is the finished task from me. Hope to hear from you soon.`;
 
     try {

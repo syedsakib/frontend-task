@@ -59,7 +59,7 @@ export const notifyPost =
   ({ name, email, repoUrl, message }) =>
   async (dispatch) => {
     try {
-      let result = await httpBackend.post("/login", {
+      let result = await httpBackend.post("/notify", {
         name,
         email,
         repoUrl,
