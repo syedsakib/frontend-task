@@ -1,6 +1,6 @@
 import authTypes from "./authTypes";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import httpBackend from "../apis/httpBackend";
+import { toast } from "react-toastify";
 
 export const fetchUserRequest = () => {
   return {
@@ -27,7 +27,7 @@ export const fetchToken =
   async (dispatch) => {
     try {
       dispatch(fetchUserRequest());
-      let result = await axios.post("http://35.201.2.209:8000/login", {
+      let result = await httpBackend.post("/login", {
         email,
         password,
       });
@@ -39,6 +39,37 @@ export const fetchToken =
     } catch (error) {
       const errormessage = error.message;
       dispatch(fetchUserFailure(errormessage));
+      toast("Something went wrong, Please try again");
+    }
+  };
+
+export const checkIsTokenAvailable = () => async (dispatch) => {
+  try {
+    let token = localStorage.getItem("auth_token");
+    if (!token) {
+      dispatch(fetchToken());
+    }
+  } catch (error) {
+    const errormessage = error.message;
+    console.log(errormessage);
+  }
+};
+
+export const notifyPost =
+  ({ name, email, repoUrl, message }) =>
+  async (dispatch) => {
+    try {
+      let result = await httpBackend.post("/login", {
+        name,
+        email,
+        repoUrl,
+        message,
+      });
+      console.log("result.data", result.data);
+      toast("Notified Successfully");
+    } catch (error) {
+      const errormessage = error.message;
+      console.log(errormessage);
       toast("Something went wrong, Please try again");
     }
   };

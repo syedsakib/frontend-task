@@ -1,44 +1,58 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { connect } from "react-redux";
 
 import { fetchToken } from "../redux/auth/authActions";
+import LoaderComponent from "../component/Spinner";
 
 const AuthPage = ({ authState, fetchToken }) => {
   const navigate = useNavigate();
-  //   const userData = useSelector((state) => state.auth);
-
+  const [isLoading, setIsLoading] = useState(false);
   const { loading, error, auth_token } = authState;
 
-  //console.log({ loading, error, auth_token });
+  useEffect(() => {
+    if (auth_token) {
+      navigate("devices");
+    }
+  }, [loading, error, auth_token]);
 
-  const dispatch = useDispatch();
+  const checkIsTokenAvailable = () => {
+    setIsLoading(true);
+    let token = localStorage.getItem("auth_token");
+    if (token) {
+      navigate("devices");
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    // if (auth_token) {
-    //   navigate("devices");
-    // }
-  }, [loading, error, auth_token]);
+    checkIsTokenAvailable();
+  }, [isLoading]);
 
   const onSubmitHandler = async (values) => {
     try {
-      let result = await fetchToken(values);
-      console.log("dashboardLogin", result);
+      await fetchToken(values);
     } catch (e) {
       console.log(e);
     }
   };
 
+  if (isLoading)
+    return (
+      <div>
+        <LoaderComponent />
+      </div>
+    );
+
   if (loading)
     return (
       <div>
-        <h2>LOADING COMPONENT</h2>
+        <LoaderComponent />
       </div>
     );
 
